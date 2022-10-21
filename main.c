@@ -73,7 +73,6 @@ main (int argc, char **argv)
 		poppler_page_add_annot (page, annot_addr);
 		
 		g_object_unref (doc);
-		
 	}
 	
 	poppler_document_save (doc, "file:///home/shawn/projects/pdfdraw/done.pdf", &err);
@@ -82,6 +81,8 @@ main (int argc, char **argv)
 		g_print ("POPPLER ERROR: %s\n", err->message);
 		g_error_free (err);
 	}
+	
+	g_print ("REF COUNT: %d\n", G_OBJECT (page)->ref_count);
 	
 	g_object_unref (doc);
 	
