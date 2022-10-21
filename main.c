@@ -69,9 +69,7 @@ main (int argc, char **argv)
 	
 	for (gint64 i = 0; i < np; i++){
 		PopplerPage *page = poppler_document_get_page (doc, i);
-		
 		poppler_page_add_annot (page, annot_addr);
-		
 		g_object_unref (doc);
 	}
 	
@@ -82,21 +80,12 @@ main (int argc, char **argv)
 		g_error_free (err);
 	}
 	
-	g_print ("REF COUNT: %d\n", G_OBJECT (page)->ref_count);
-	
 	g_object_unref (doc);
+	
+	g_print ("REF COUNT: %d\n", G_OBJECT (doc)->ref_count);
 	
 	poppler_rectangle_free (address);
 	poppler_color_free (color);
 	
-	doc = NULL;
-	
-	/* Ensure doc doesn't does not have any refs*/
-	g_assert_null (doc);
-	
-	
-
-
-
 	return 0;
 }
