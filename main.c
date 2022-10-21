@@ -1,7 +1,7 @@
 /*
  * main.c
  * 
- * Copyright 2022 Ricoh USA
+ * Copyright 2022 Shawn Achimasi
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,14 +28,14 @@
 
 #define PARAM_ERROR "Need 1 param (PDF file name)"
 
-gint64
+int
 main (int argc, char **argv)
 {
 	GFile *f = NULL;
 	GError *err = NULL;
 	PopplerDocument *doc = NULL;
 	gchar *pdf_file_name = NULL;
-	gint64 cp, np;
+	gint64 np;
 	
 	if (argc < 2){
 		g_print (PARAM_ERROR);
@@ -51,7 +51,7 @@ main (int argc, char **argv)
 	PopplerColor *color = poppler_color_new ();
 	color->red = 0;
 	color->blue = 150;
-	color->green = 0;
+	color->green = 60;
 	
 	/* Form PDF file name from print job number */
 	g_print ("PDF file name: %s\n", argv[1]);
@@ -71,19 +71,31 @@ main (int argc, char **argv)
 		PopplerPage *page = poppler_document_get_page (doc, i);
 		
 		poppler_page_add_annot (page, annot_addr);
+		
+		g_object_unref (doc);
+		
 	}
 	
-	poppler_document_save (doc, "done.pdf", &err);
+	poppler_document_save (doc, "file:///home/shawn/projects/pdfdraw/done.pdf", &err);
 	
-	if (!err){
+	if (err){
 		g_print ("POPPLER ERROR: %s\n", err->message);
 		g_error_free (err);
 	}
 	
+	g_object_unref (doc);
+	
 	poppler_rectangle_free (address);
 	poppler_color_free (color);
 	
+	doc = NULL;
+	
+	/* Ensure doc doesn't does not have any refs*/
+	g_assert_null (doc);
 	
 	
+
+
+
 	return 0;
 }
